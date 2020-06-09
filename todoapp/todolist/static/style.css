@@ -1,0 +1,94 @@
+html {
+   font-size: 100%;
+}
+body {
+   background:slategrey;
+   font-family: 'Open Sans',sans-serif;
+}
+/* super basic grid structure */
+.container {
+   width: 600px;
+   margin: 0 auto;
+   background: #ffffff;
+   padding: 20px 0;
+   -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.2);
+           box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+/* logo */
+h1 {
+   text-align: center;
+}
+.subtitle {
+   text-align: center;
+   margin-top: .5rem
+}
+.topRowSubtitle {
+   margin-bottom: 5%;
+}
+.addTodoFormItem {
+   justify-content: center;
+   margin-right: 5%;
+}
+#category {
+   margin-right: 5%;
+}
+#dueDate {
+   margin-left: 5%;
+}
+.row {
+   margin-bottom: 15px;
+   justify-content: center;
+   text-align: center;
+}
+.column {
+   float: left;
+   text-align: center;
+   width: 33.33%;
+   border: outset;
+}
+.todoItem {
+   margin-top: 5%;
+   margin-bottom: 5%;
+}
+.todoForm {
+   text-align: center;
+}
+.addDescription{
+   margin-left: 10%;
+   margin-right: 10%;
+}
+#existingCategories {
+   margin-bottom: 5%;
+}
+#categoryForm {
+   padding-right: 15px;
+   padding-left: 15px;
+}
+.categoryDelete {
+   margin-left: 1%;
+   margin-right: 3%;
+}
+.todoTitle {
+   margin-right: 4%;
+   margin-left: 4%;
+}
+.todoSubtitle {
+   font-size: smaller;
+   display: none;
+}
+.divider {
+   margin: 5px;
+}
+.progress_header {
+   text-decoration: underline;
+   margin-bottom: 8%;
+}
+.editFormPopupWindow {
+   display: none;
+}
+.expandButtonAll {
+   margin-top: 5%;
+}
+.card-body {
+   padding: .25rem !important;
+}

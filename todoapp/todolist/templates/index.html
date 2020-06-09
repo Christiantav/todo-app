@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html >
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>TodoApp - Create A Todo With Django</title>
+{% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script> 
+    $(document).ready(function(){
+        $(".expandButton").click(function(event){
+            const tdid = event.target.id;
+            console.log("here", tdid)
+            $(`#todoSubtitle${tdid}`).slideToggle("slow");
+        });
+        $(".expandButtonAll").click(function(event){
+            const tdid = event.target.id;
+            console.log("here", tdid)
+            $(".todoSubtitle").slideToggle("slow");
+        });
+        $(".editFormPopup").click(function(event) {
+            const tdid = event.target.id;
+            console.log("here", tdid);
+            document.getElementById(`editFormPopup${tdid}`).style.display = "block"
+        });
+        $(".closeEditPopup").click(function(event) {
+            const tdid = event.target.id;
+            console.log("here", tdid);
+            document.getElementById(`editFormPopup${tdid}`).style.display = "none"
+        });
+        $(".submitEditPopup").click(function(event) {
+            const tdid = event.target.id;
+            console.log("here", tdid);
+        });
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"> <!-- points to static/style.css -->
+</head>
+<body>
+    <div django-app="todoManager">       
+        <div class="container-fluid">
+            <div class="content">
+                <h1>PIN's Example TodoApp</h1>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="todoForm col-md">
+                        <form action="" method="post">
+                            <h2 class="topRowSubtitle subtitle">Add Todo</h2>
+                            {% csrf_token %} <!-- csrf token for basic security -->
+                            <div class="input-group mb-3 addTodoFormItem col-auto">
+                                <input class="form-control addDescription" name="description" aria-label="Description" placeholder="Description" required></input>
+                            </div>
+                            <!-- <input type="text" id="description" class="todoName" placeholder="Whatcha wanna do?" name="description" required>
+                            <label for="description">Description</label> -->
+                            <div class="input-group mb-3 addTodoFormItem">
+                                <select id="category" class="btn btn-light" name="category_select">
+                                <option class="disabled" value="">Choose a category</option>
+                                {% for category in categories %}
+                                    <option class="" value="{{ category.name }}" name="{{ category.name }}">{{ category.name }}</option>
+                                {% endfor %}
+                                </select>
+                                <input type="date" id="dueDate" class="btn btn-light" name="date" placeholder="Due Date">
+                            </div>
+                            <div class="input-group mb-3 addTodoFormItem">
+                                <button class="todoAdd btn btn-light" name="todoAdd" type="submit"><i class="fa fa-plus icon"></i>Add todo</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-md" id="categoryForm">
+                        <h2 class="topRowSubtitle subtitle">Categories</h2>
+                        <form action="" method="post">
+                            {% csrf_token %} <!-- csrf token for basic security -->
+                            <div id="existingCategories">
+                                {% for category in categories %}
+                                    <span class="categoryTitle" value="{{ category.name }}">{{ category.name }}<button class="categoryDelete btn btn-light btn-sm" name="categoryDelete" value="{{ category.id }}" type="submit"><i class="fa fa-trash-o icon"></i></button></span>
+                                {% endfor %}
+                            </div>
+                        </form>
+                        <form action="" method="post">
+                            {% csrf_token %} <!-- csrf token for basic security -->
+                            <div class="inputContainer">
+                                <input type="text" id="description" class="todoName" placeholder="Enter category name" name="category" required>
+                                <button class="categoryAdd btn btn-light" name="categoryAdd" type="submit"><i class="fa fa-plus icon"></i>Add Category</button>
+                                <br />
+                                <button type="button" id="{{ td.id }}" class="expandButtonAll btn btn-light btn-sm"><i id="{{ td.id }}" class="fa fa-plus-circle" aria-hidden="true"></i> Toggle All Todos</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br />
+                <br />
+
+                <form action="" method="post">
+                    <h2 class="subtitle">Level of Completion</h2>
+                    <br />
+                    {% csrf_token %} <!-- csrf token for basic security -->
+                    <div class="row">
+                        <div class="column">
+                            <h3 class="progress_header">Not Started</h3>
+                            {% for td in todo %} <!-- django template lang - for loop -->
+                                <div class="card todoItem">
+                                    <div class="card-body">
+                                        <button class="todoDelete btn btn-dark btn-sm" name="todoDelete" value="{{ td.id }}" type="submit"><i class="fa fa-trash-o icon"></i></button>
+                                        <label for="{{ td.id }}" class="card-title todoTitle h4"><div>{{ td.title }}</div></label>
+                                        <button type="submit" class="moveRight btn btn-success btn-sm" name="inProgress" id="{{ td.id }}" value="{{ td.id }}"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                        <br />
+                                        <button type="button" id="{{ td.id }}" class="expandButton btn btn-primary btn-sm"><i id="{{ td.id }}" class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                                        <button type="button" id="{{ td.id }}" class="editFormPopup btn btn-secondary btn-sm"><i id="{{ td.id }}" class="fa fa-pencil" aria-hidden="true"></i></button>
+                                        <br />
+                                        <div id="todoSubtitle{{ td.id }}" class="todoSubtitle">
+                                            <span class="category-{{ td.category }}">Category: {{ td.category }}</span>
+                                            <span class="divider"><strong>||</strong></span>
+                                            {% if td.dueness <= 7 %}
+                                                <span class="badge badge-danger todoDate">Due: {{ td.due_date }}</span>
+                                            {% endif %}
+                                            {% if td.dueness > 7 and td.dueness <= 14 %}
+                                                <span class="badge badge-warning todoDate">Due: {{ td.due_date }}</span>
+                                            {% endif %}
+                                            {% if td.dueness > 14 %}
+                                                <span class="badge badge-primary todoDate">Due: {{ td.due_date }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="editFormPopupWindow" id="editFormPopup{{ td.id }}">
+                                    <div class="inputContainer">
+                                        <input type="text" id="description" class="todoName" placeholder="Whatcha wanna do?" name="edit_description{{ td.id }}" value="{{ td.title }}" required>
+                                        <label for="description">Current Description: {{ td.title }}</label>
+                                    </div>
+                                    <div class="inputContainer">
+                                        <select id="category" class="todoCategory" name="edit_category_select{{ td.id }}">
+                                        <option class="disabled" value="">Choose a category</option>
+                                        {% for category in categories %}
+                                            <option class="" value="{{ category.name }}" name="{{ category.name }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                        </select>
+                                        <label for="category">Current Category: {{ td.category }}</label>
+                                    </div>
+                                    <div class="inputContainer">
+                                        <input type="date" name="edit_due_date{{ td.id }}">
+                                        <label for="dueDate">Current Due Date: {{ td.due_date }}</label>
+                                    </div>
+                                
+                                    <button type="submit" name="editTodo" id="{{ td.id }}" value="{{ td.id }}" class="submitEditPopup btn btn-primary">Update</button>
+                                    <button type="button" id="{{ td.id }}" class="closeEditPopup btn btn-danger">Close</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="column">
+                            <h3 class="progress_header">In Progress</h3>
+                            {% for ip in in_progress %} <!-- django template lang - for loop -->
+                            <div class="card todoItem">
+                                <div class="card-body">
+                                    <button type="submit" class="moveRight btn btn-success btn-sm" name="todo" id="{{ ip.id }}" value="{{ ip.id }}"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                    <label for="{{ ip.id }}" class="card-title todoTitle h4"><div>{{ ip.title }}</div></label>
+                                    <button type="submit" class="moveRight btn btn-success btn-sm" name="completed" id="{{ ip.id }}" value="{{ ip.id }}"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                    <br />
+                                    <button type="button" id="{{ ip.id }}" class="expandButton btn btn-primary btn-sm"><i id="{{ ip.id }}" class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                                    <button type="button" id="{{ ip.id }}" class="editFormPopup btn btn-secondary btn-sm"><i id="{{ ip.id }}" class="fa fa-pencil" aria-hidden="true"></i></button>
+                                    <br />
+                                    <div id="todoSubtitle{{ ip.id }}" class="todoSubtitle">
+                                        <span class="category-{{ ip.category }}">Category: {{ ip.category }}</span>
+                                        <span class="divider"><strong>||</strong></span>
+                                        {% if ip.dueness <= 7 %}
+                                            <span class="badge badge-danger todoDate">Due: {{ ip.due_date }}</span>
+                                        {% endif %}
+                                        {% if ip.dueness > 7 and ip.dueness <= 14 %}
+                                            <span class="badge badge-warning todoDate">Due: {{ ip.due_date }}</span>
+                                        {% endif %}
+                                        {% if ip.dueness > 14 %}
+                                            <span class="badge badge-primary todoDate">Due: {{ ip.due_date }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="editFormPopupWindow" id="editFormPopup{{ ip.id }}">
+                                <div class="inputContainer">
+                                    <input type="text" id="description" class="todoName" placeholder="Whatcha wanna do?" name="edit_description{{ ip.id }}" value="{{ ip.title }}" required>
+                                    <label for="description">Current Description: {{ ip.title }}</label>
+                                </div>
+                                <div class="inputContainer">
+                                    <select id="category" class="todoCategory" name="edit_category_select{{ ip.id }}">
+                                    <option class="disabled" value="">Choose a category</option>
+                                    {% for category in categories %}
+                                        <option class="" value="{{ category.name }}" name="{{ category.name }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    <label for="category">Current Category: {{ ip.category }}</label>
+                                </div>
+                                <div class="inputContainer">
+                                    <input type="date" name="edit_due_date{{ ip.id }}">
+                                    <label for="dueDate">Current Due Date: {{ ip.due_date }}</label>
+                                </div>
+                            
+                                <button type="submit" name="editTodo" id="{{ ip.id }}" value="{{ ip.id }}" class="submitEditPopup btn btn-primary">Update</button>
+                                <button type="button" id="{{ ip.id }}" class="closeEditPopup btn btn-danger">Close</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="column">
+                            <h3 class="progress_header">Completed</h3>
+                            {% for cp in completed %} <!-- django template lang - for loop -->
+                            <div class="card todoItem">
+                                <div class="card-body">
+                                    <button type="submit" class="moveRight btn btn-success btn-sm" name="inProgress" id="{{ cp.id }}" value="{{ cp.id }}"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                    <label for="{{ cp.id }}" class="card-title todoTitle h4"><div>{{ cp.title }}</div></label>
+                                    <button class="todoDelete btn btn-dark btn-sm" name="todoDelete" value="{{ cp.id }}" type="submit"><i class="fa fa-trash-o icon"></i></button>
+                                    <br />
+                                    <button type="button" id="{{ cp.id }}" class="expandButton btn btn-primary btn-sm"><i id="{{ cp.id }}" class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                                    <button type="button" id="{{ cp.id }}" class="editFormPopup btn btn-secondary btn-sm"><i id="{{ cp.id }}" class="fa fa-pencil" aria-hidden="true"></i></button>
+                                    <br />
+                                    <div id="todoSubtitle{{ cp.id }}" class="todoSubtitle">
+                                        <span class="category-{{ cp.category }}">Category: {{ cp.category }}</span>
+                                        <span class="divider"><strong>||</strong></span>
+                                        {% if cp.dueness <= 7 %}
+                                            <span class="badge badge-danger todoDate">Due: {{ cp.due_date }}</span>
+                                        {% endif %}
+                                        {% if cp.dueness > 7 and cp.dueness <= 14 %}
+                                            <span class="badge badge-warning todoDate">Due: {{ cp.due_date }}</span>
+                                        {% endif %}
+                                        {% if cp.dueness > 14 %}
+                                            <span class="badge badge-primary todoDate">Due: {{ cp.due_date }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="editFormPopupWindow" id="editFormPopup{{ cp.id }}">
+                                <div class="inputContainer">
+                                    <input type="text" id="description" class="todoName" placeholder="Whatcha wanna do?" name="edit_description{{ cp.id }}" value="{{ cp.title }}" required>
+                                    <label for="description">Current Description: {{ cp.title }}</label>
+                                </div>
+                                <div class="inputContainer">
+                                    <select id="category" class="todoCategory" name="edit_category_select{{ cp.id }}">
+                                    <option class="disabled" value="">Choose a category</option>
+                                    {% for category in categories %}
+                                        <option class="" value="{{ category.name }}" name="{{ category.name }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    <label for="category">Current Category: {{ cp.category }}</label>
+                                </div>
+                                <div class="inputContainer">
+                                    <input type="date" name="edit_due_date{{ cp.id }}">
+                                    <label for="dueDate">Current Due Date: {{ cp.due_date }}</label>
+                                </div>
+                            
+                                <button type="submit" name="editTodo" id="{{ cp.id }}" value="{{ cp.id }}" class="submitEditPopup btn btn-primary">Update</button>
+                                <button type="button" id="{{ cp.id }}" class="closeEditPopup btn btn-danger">Close</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <h2 class="subtitle">Categories</h2>
+                    <br />
+                        <div class="row>">
+                            {% for k, v in categorized_todos %}
+                                <div class="column col-md">
+                                    <h3>{{ k }}</h3>
+                                    {% for c in v %} <!-- django template lang - for loop -->
+                                        <li class="todoItem">
+                                            <label for="{{ c.name }}"><span>{{ c.title }}</span></label>
+                                            <br />
+                                        </li>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                </form>
+            </div> <!-- content -->
+        </div> <!-- container -->
+    </div>
+</body>
+</html>
