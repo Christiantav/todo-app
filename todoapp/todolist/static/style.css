@@ -1,6 +1,12 @@
 html {
    font-size: 100%;
 }
+
+#title {
+   margin-top: 2em;
+   font-family: 'Cormorant Garamond', serif;
+}
+
 body {
    background:slategrey;
    font-family: 'Open Sans',sans-serif;
@@ -31,6 +37,9 @@ h1 {
 }
 #category {
    margin-right: 5%;
+}
+.categoryTitle {
+   font-size: 1.25em;
 }
 #dueDate {
    margin-left: 5%;

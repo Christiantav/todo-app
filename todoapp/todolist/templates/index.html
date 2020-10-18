@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>TodoApp - Create A Todo With Django</title>
-{% load static %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $(".expandButton").click(function(event){
-            const tdid = event.target.id;
-            console.log("here", tdid)
-            $(`#todoSubtitle${tdid}`).slideToggle("slow");
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TodoApp - Create A Todo With Django</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".expandButton").click(function(event){
+                const tdid = event.target.id;
+                console.log("here", tdid)
+                $(`#todoSubtitle${tdid}`).slideToggle("slow");
+            });
+            $(".expandButtonAll").click(function(event){
+                const tdid = event.target.id;
+                console.log("here", tdid)
+                $(".todoSubtitle").slideToggle("slow");
+            });
+            $(".editFormPopup").click(function(event) {
+                const tdid = event.target.id;
+                console.log("here", tdid);
+                document.getElementById(`editFormPopup${tdid}`).style.display = "block"
+            });
+            $(".closeEditPopup").click(function(event) {
+                const tdid = event.target.id;
+                console.log("here", tdid);
+                document.getElementById(`editFormPopup${tdid}`).style.display = "none"
+            });
+            $(".submitEditPopup").click(function(event) {
+                const tdid = event.target.id;
+                console.log("here", tdid);
+            });
         });
-        $(".expandButtonAll").click(function(event){
-            const tdid = event.target.id;
-            console.log("here", tdid)
-            $(".todoSubtitle").slideToggle("slow");
-        });
-        $(".editFormPopup").click(function(event) {
-            const tdid = event.target.id;
-            console.log("here", tdid);
-            document.getElementById(`editFormPopup${tdid}`).style.display = "block"
-        });
-        $(".closeEditPopup").click(function(event) {
-            const tdid = event.target.id;
-            console.log("here", tdid);
-            document.getElementById(`editFormPopup${tdid}`).style.display = "none"
-        });
-        $(".submitEditPopup").click(function(event) {
-            const tdid = event.target.id;
-            console.log("here", tdid);
-        });
-    });
-</script>
-<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"> <!-- points to static/style.css -->
+    </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"> <!-- points to static/style.css -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&display=swap" rel="stylesheet">
 </head>
 <body>
     <div django-app="todoManager">       
         <div class="container-fluid">
             <div class="content">
-                <h1>PIN's Example TodoApp</h1>
+                <h1 id="title"><b>The Todo App</b></h1>
                 <br />
                 <br />
                 <div class="row">
@@ -255,21 +256,7 @@
                         </div>
                     </div>
 
-                    <h2 class="subtitle">Categories</h2>
-                    <br />
-                        <div class="row>">
-                            {% for k, v in categorized_todos %}
-                                <div class="column col-md">
-                                    <h3>{{ k }}</h3>
-                                    {% for c in v %} <!-- django template lang - for loop -->
-                                        <li class="todoItem">
-                                            <label for="{{ c.name }}"><span>{{ c.title }}</span></label>
-                                            <br />
-                                        </li>
-                                    {% endfor %}
-                                </div>
-                            {% endfor %}
-                        </div>
+
                 </form>
             </div> <!-- content -->
         </div> <!-- container -->
